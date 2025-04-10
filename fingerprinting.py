@@ -5,6 +5,7 @@ import numpy as np
 from scipy.ndimage import maximum_filter
 
 import matplotlib.pyplot as plt # for tests
+from pathlib import Path
 
 def generate_spectogram(path: str):
     audio_signal, sampling_rate = lr.load(path, sr=22050, mono=True)
@@ -208,7 +209,10 @@ def match_sample(sample_fingerprint, db_fingerprints):
 
 import sqlite3
 
-def add_song_to_db(conn, song_name, file_path):
+def add_song_to_db(conn, song_name, file_path: str):
+    if isinstance(file_path, Path):
+        file_path = str(file_path)
+
     cursor = conn.cursor()
     try:
         cursor.execute("INSERT INTO songs (song_name, file_path) VALUES (?, ?)", (song_name, file_path))
