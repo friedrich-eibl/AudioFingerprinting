@@ -19,7 +19,7 @@ def add_songs_from_folder_to_db():
 
 
 if __name__ == '__main__':
-    song_folder = Path(__file__).parent.parent / 'northern_cardinal_clips'
-    db_path = Path(__file__).parent.parent / 'fingerprint_database.db'
+    song_folder = Path(__file__).parent.parent / 'committee_audio'
+    db_path = Path(__file__).parent.parent / 'fingerprints_committee.db'
 
     add_songs_from_folder_to_db()

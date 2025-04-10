@@ -1,10 +1,13 @@
 from fingerprinting import *
 from pathlib import Path
 
-db_file = 'fingerprint_database.db'
-pathlist = list(Path('northern_cardinal_clips').glob('**/*.wav'))
+db_file = 'fingerprints_committee.db'
+test_folder = 'eurasian_blackcap'
+pathlist = list(Path(test_folder).glob('**/*.mp3')) + list(Path(test_folder).glob('**/*.wav'))
 
 successful_matches = 0
+no_match_count = 0
+wrong_matches = 0
 
 for path in pathlist:
     # because path is object not string
@@ -16,11 +19,17 @@ for path in pathlist:
     match_name, score = match_sample_db(test_hashes, db_file)
 
     if score > 30:
-        print(f"Match result: Song='{match_name}', Score={score}\n")
+        print(f"Match result: Song='{match_name}', Score={score}")
         if match_name in str(path):
             successful_matches += 1
+            print('\n')
+        else:
+            print("\033[91mWrong Match!\033[0m\n")
+            wrong_matches += 1
     else:
-        print('No Match!\n')
+        no_match_count += 1
+        print("\033[93mNo Match!\033[0m\n")
 
-print("\n\nFailed Matches:", len(pathlist) - successful_matches)
+print("\n\nNo Matches:", no_match_count)
+print("Wrong matches:", wrong_matches)
 print("Successful Matches:", successful_matches)
