@@ -1,0 +1,23 @@
+# Git specific
+.git
+.gitignore
+
+# Docker specific
+Dockerfile
+.dockerignore
+
+# Python specific
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+venv/
+*.env
+.env*
+
+# IDE specific
+.vscode/
+.idea/
+
+# Other
+*.log
