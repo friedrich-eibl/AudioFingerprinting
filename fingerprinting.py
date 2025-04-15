@@ -1,10 +1,7 @@
-import time
-
 import librosa as lr
 import numpy as np
 from scipy.ndimage import maximum_filter
 
-import matplotlib.pyplot as plt # for tests
 from pathlib import Path
 
 def generate_spectogram(path: str):
@@ -15,12 +12,6 @@ def generate_spectogram(path: str):
 
     return spectrogram, sampling_rate
 
-# # tests
-# lr.display.specshow(spectrogram, sr=sampling_rate, x_axis='time', y_axis='log')
-# plt.colorbar(format='%+2.0f dB')
-# plt.title('Spectrogram')
-# plt.show()
-# # end tests
 
 
 def find_peaks(spectrogram, sampling_rate):
@@ -40,14 +31,6 @@ def find_peaks(spectrogram, sampling_rate):
     print(f"Found {len(peaks)} peaks.")
     return peaks
 
-# # tests
-# plt.figure()
-# lr.display.specshow(spectrogram, sr=sampling_rate, x_axis='time', y_axis='log')
-# plt.scatter(peak_times, peak_freqs, c='r', s=10, marker='x') # Plot peaks
-# plt.colorbar(format='%+2.0f dB')
-# plt.title('Spectrogram with Peaks')
-# plt.show()
-# # end tests
 
 # generate fingerprints
 def generate_fingerprints(peaks, song) -> dict:
