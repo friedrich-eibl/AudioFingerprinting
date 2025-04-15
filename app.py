@@ -11,10 +11,14 @@ import uvicorn
 from starlette.responses import HTMLResponse
 from fastapi import FastAPI, File, UploadFile
 from starlette.responses import JSONResponse
+from starlette.staticfiles import StaticFiles
 
 from fingerprinting import endpoint_detection_app
 
 app = FastAPI()
+BASE_DIR = Path(__file__).resolve().parent
+STATIC_DIR = BASE_DIR / "static"
+app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 @app.get('/api/')
 async def read_root():
@@ -112,10 +116,9 @@ async def process_audio_upload_convert(audio_file: UploadFile = File(...)) -> JS
             print("UploadFile closed.")
 
 
-BASE_DIR = Path(__file__).resolve().parent
 @app.get('/', response_class=HTMLResponse)
 async def read_html_root():
-    html_file_path = BASE_DIR / "index.html"
+    html_file_path = BASE_DIR / "templates/index.html"
     try:
         with open(html_file_path, "r", encoding="utf-8") as f:
             html_content = f.read()
