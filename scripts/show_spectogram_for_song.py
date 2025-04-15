@@ -17,13 +17,13 @@ def show_spectogram_for_song(file_path, show_peaks: bool):
         plt.scatter(peak_times, peak_freqs, c='r', s=10, marker='x') # Plot peaks
 
     plt.colorbar(format='%+2.0f dB')
-    plt.title('Spectrogram with Peaks')
+    plt.title('Spectrogram mixed with other sounds')
     plt.show()
 
 
 if __name__ == '__main__':
     song_path = 'db_mgm_cut_clip.mp3'
-    #song_path = 'not_in_db_clip.mp3'
+    song_path = 'recognition_test_db_with_noise.mp3'
         # (str(Path(__file__).parent.parent
         #         / 'committee_audio/+++ AMPELOPOULI9         Mönchsgrasmücke  BlackCap       meist verwendet.mp3'))
     show_spectogram_for_song(song_path, True)
