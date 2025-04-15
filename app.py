@@ -136,6 +136,7 @@ async def read_html_root():
     <button id="stopButton" disabled>Stop Recording</button>
 
     <div id="status">Status: Ready</div>
+    <div id="eval">Score</div>
     <div id="results" style="display: none;"></div>
 
     <script>
@@ -143,6 +144,7 @@ async def read_html_root():
         const stopButton = document.getElementById('stopButton');
         const statusDiv = document.getElementById('status');
         const resultsDiv = document.getElementById('results');
+        const evalDiv = document.getElementById('eval');
 
         let mediaRecorder;
         let audioChunks = [];
@@ -204,6 +206,18 @@ async def read_html_root():
                         if (response.ok) {
                             statusDiv.textContent = 'Status: Upload successful. Processing complete.';
                             resultsDiv.textContent = JSON.stringify(result, null, 2);
+                            const score = result.processing_result.score;
+                            
+                            if (score === null || typeof score === 'undefined') {
+                                 evalMessage = 'Score not available.';
+                            } else if (score < 30) { // Example threshold
+                                evalMessage = 'No match found!';
+                            } else if (score >= 30){ // Example threshold
+                                evalMessage = 'Likely illegal trap detected';
+                            }
+                            
+                            evalDiv.textContent = evalMessage;
+                            
                         } else {
                             statusDiv.textContent = `Status: Error ${response.status} - ${result.detail || response.statusText}`;
                             resultsDiv.textContent = JSON.stringify(result, null, 2); // Show error detail JSON
