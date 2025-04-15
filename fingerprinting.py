@@ -163,3 +163,13 @@ def match_sample_db(sample_fingerprints: dict, db_path: str):
     best_match_song_name = song_id_to_name.get(best_match_song_id_num, "Unknown ID")
 
     return best_match_song_name, max_count
+
+
+def endpoint_detection_app(file_path):
+    db_file = 'fingerprints_committee.db'
+    spectrogram, sampling_rate = generate_spectogram(file_path)
+    peaks = find_peaks(spectrogram, sampling_rate)
+    test_hashes = generate_fingerprints(peaks, 'test')
+    match_name, score = match_sample_db(test_hashes, db_file)
+
+    return match_name, score
