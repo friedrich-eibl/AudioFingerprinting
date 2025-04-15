@@ -1,8 +1,12 @@
 import librosa as lr
 import numpy as np
+import sqlite3
+import time
+from collections import defaultdict # Useful for counting
 from scipy.ndimage import maximum_filter
 
 from pathlib import Path
+
 
 def generate_spectogram(path: str):
     audio_signal, sampling_rate = lr.load(path, sr=22050, mono=True)
@@ -11,7 +15,6 @@ def generate_spectogram(path: str):
     spectrogram = lr.amplitude_to_db(np.abs(transformed_signal), ref=np.max)
 
     return spectrogram, sampling_rate
-
 
 
 def find_peaks(spectrogram, sampling_rate):
@@ -32,7 +35,6 @@ def find_peaks(spectrogram, sampling_rate):
     return peaks
 
 
-# generate fingerprints
 def generate_fingerprints(peaks, song) -> dict:
     # Simplified conceptual hashing (needs refinement for efficiency and robustness)
     hashes = {} # Dictionary to store hashes: { hash_value: (song_id, time_offset) }
@@ -76,6 +78,7 @@ def generate_fingerprints(peaks, song) -> dict:
                 break
     return hashes
 
+
 def match_sample(sample_fingerprint, db_fingerprints):
     matches = {}
     start_time = time.time()
@@ -104,7 +107,6 @@ def match_sample(sample_fingerprint, db_fingerprints):
                         matches[db_song_id][offset_bin] = 0
                     matches[db_song_id][offset_bin] += 1
 
-
     #scoring
     best_match_song_id = None
     max_count = 0  # This will be the actual score
@@ -132,8 +134,6 @@ def match_sample(sample_fingerprint, db_fingerprints):
     return best_match_song_id, max_count
 
 
-import sqlite3
-
 def add_song_to_db(conn, song_name, file_path: str):
     if isinstance(file_path, Path):
         file_path = str(file_path)
@@ -150,6 +150,7 @@ def add_song_to_db(conn, song_name, file_path: str):
         cursor.execute("SELECT song_id FROM songs WHERE song_name = ?", (song_name,))
         result = cursor.fetchone()
         return result[0] if result else None
+
 
 def add_fingerprints_to_db(conn, song_id, fingerprint_dict):
     cursor = conn.cursor()
@@ -170,9 +171,6 @@ def add_fingerprints_to_db(conn, song_id, fingerprint_dict):
     conn.commit()
     print(f"Added {len(fingerprint_data)} fingerprint entries for song ID {song_id}")
 
-
-import time
-from collections import defaultdict # Useful for counting
 
 def match_sample_db(sample_fingerprints: dict, db_path: str):
     """Matches sample fingerprints against the SQLite database."""
