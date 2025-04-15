@@ -40,9 +40,9 @@ def generate_fingerprints(peaks, song) -> dict:
     hashes = {} # Dictionary to store hashes: { hash_value: (song_id, time_offset) }
 
     # Parameters for pairing (adjust these)
-    target_zone_time_delta_min = 0.1 # seconds
-    target_zone_time_delta_max = 1.0 # seconds
-    target_zone_freq_delta_max = 1000 # Hz (example)
+    target_zone_time_delta_min = 0.1
+    target_zone_time_delta_max = 1.0
+    target_zone_freq_delta_max = 1000
 
     # This part would run for *each song* when building the database
     song_id = song # Replace with actual ID
@@ -58,18 +58,13 @@ def generate_fingerprints(peaks, song) -> dict:
 
             # Check if within time bounds of target zone
             if target_zone_time_delta_min <= delta_t <= target_zone_time_delta_max:
-                 # Optional: Check frequency bounds too
-                 # if abs(target_freq - anchor_freq) <= target_zone_freq_delta_max:
 
-                # Create the hash (example - needs a good, robust hash function)
-                # Use integer representations for frequencies/time diffs for better hashing
                 freq1_bin = int(anchor_freq)
                 freq2_bin = int(target_freq)
                 delta_t_bin = int(delta_t * 10) # Scale time delta, adjust precision
 
                 hash_value = hash((freq1_bin, freq2_bin, delta_t_bin))
 
-                # Store in database (or temporary dict for sample)
                 if hash_value not in hashes:
                     hashes[hash_value] = []
                 hashes[hash_value].append((song_id, anchor_time))
@@ -111,7 +106,6 @@ def add_fingerprints_to_db(conn, song_id, fingerprint_dict):
             hash_str = str(hash_val)
             fingerprint_data.append((hash_str, song_id, offset))
 
-    # Use executemany for efficiency
     cursor.executemany("INSERT INTO fingerprints (hash_value, song_id, offset) VALUES (?, ?, ?)", fingerprint_data)
     conn.commit()
     print(f"Added {len(fingerprint_data)} fingerprint entries for song ID {song_id}")
@@ -125,7 +119,6 @@ def match_sample_db(sample_fingerprints: dict, db_path: str):
     matches = defaultdict(lambda: defaultdict(int)) # { song_id: { offset_bin: count } }
     start_time = time.time()
 
-    # Lookup song names once for reporting
     cursor.execute("SELECT song_id, song_name FROM songs")
     song_id_to_name = dict(cursor.fetchall())
 
@@ -133,7 +126,7 @@ def match_sample_db(sample_fingerprints: dict, db_path: str):
     total_matches_found = 0
 
     for sample_hash, sample_anchor_times in sample_fingerprints.items():
-        hash_str = str(sample_hash) # Ensure consistent type
+        hash_str = str(sample_hash)
         # Query DB for this hash
         cursor.execute("SELECT song_id, offset FROM fingerprints WHERE hash_value = ?", (hash_str,))
         db_entries = cursor.fetchall() # List of (song_id, db_anchor_time)
@@ -141,13 +134,13 @@ def match_sample_db(sample_fingerprints: dict, db_path: str):
         processed_hashes += 1
         if db_entries:
             total_matches_found += len(db_entries) * len(sample_anchor_times)
-            for sample_anchor_tuple in sample_anchor_times: # sample_anchor_time is float
+            for sample_anchor_tuple in sample_anchor_times:
                 for db_song_id, db_anchor_time in db_entries:
                     delta_offset = db_anchor_time - sample_anchor_tuple[1]
                     offset_bin = round(delta_offset, 1)
                     matches[db_song_id][offset_bin] += 1
 
-    conn.close() # Close connection after querying
+    conn.close()
 
     # --- Scoring (same logic as before) ---
     best_match_song_id_num = None
@@ -167,7 +160,6 @@ def match_sample_db(sample_fingerprints: dict, db_path: str):
     match_duration = time.time() - start_time
     print(f"Matching took {match_duration:.2f} seconds. Found {total_matches_found} total hash alignments.")
 
-    # Convert numerical song ID back to name for reporting
     best_match_song_name = song_id_to_name.get(best_match_song_id_num, "Unknown ID")
 
     return best_match_song_name, max_count
