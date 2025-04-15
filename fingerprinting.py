@@ -131,64 +131,6 @@ def match_sample(sample_fingerprint, db_fingerprints):
     # Return the song ID with the highest score (max_count) and the score itself
     return best_match_song_id, max_count
 
-#
-# print ("\nfull song")
-# spectrogram, sampling_rate = generate_spectogram('songs/1685 Purcell , Trumpet Tune and Air.mp3')
-# peaks = find_peaks(spectrogram, sampling_rate)
-# song_hashes = generate_fingerprints(peaks,'purcell')
-# print(f"Generated {len(song_hashes)} hashes")
-#
-# print("\nTest 0")
-# spectrogram, sampling_rate = generate_spectogram('test_frags/Purcell_4.mp3')
-# peaks = find_peaks(spectrogram, sampling_rate)
-# test_hashes = generate_fingerprints(peaks, 'test')
-# print(f"Generated {len(test_hashes)} hashes")
-# match_id, score = match_sample(test_hashes, song_hashes)
-# print(f"Match result for Test 0: Song='{match_id}', Score={score}")
-#
-# print("\nTest 1")
-# spectrogram, sampling_rate = generate_spectogram('test_frags/Bach_0.mp3')
-# peaks = find_peaks(spectrogram, sampling_rate)
-# test_hashes = generate_fingerprints(peaks, 'test')
-# print(f"Generated {len(test_hashes)} hashes")
-# match_id, score = match_sample(test_hashes, song_hashes)
-# print(f"Match result for Test 0: Song='{match_id}', Score={score}")
-#
-# print("\nTest 2")
-# spectrogram, sampling_rate = generate_spectogram('test_frags/Purcell_0.mp3')
-# peaks = find_peaks(spectrogram, sampling_rate)
-# test_hashes = generate_fingerprints(peaks, 'test')
-# print(f"Generated {len(test_hashes)} hashes")
-# match_id, score = match_sample(test_hashes, song_hashes)
-# print(f"Match result for Test 0: Song='{match_id}', Score={score}")
-#
-# print("\nTest 3")
-# spectrogram, sampling_rate = generate_spectogram('test_frags/Purcell_1.mp3')
-# peaks = find_peaks(spectrogram, sampling_rate)
-# test_hashes = generate_fingerprints(peaks, 'test')
-# print(f"Generated {len(test_hashes)} hashes")
-# match_id, score = match_sample(test_hashes, song_hashes)
-# print(f"Match result for Test 0: Song='{match_id}', Score={score}")
-#
-# print("\nTest 4")
-# spectrogram, sampling_rate = generate_spectogram('test_frags/Purcell_2.mp3')
-# peaks = find_peaks(spectrogram, sampling_rate)
-# test_hashes = generate_fingerprints(peaks, 'test')
-# print(f"Generated {len(test_hashes)} hashes")
-# match_id, score = match_sample(test_hashes, song_hashes)
-# print(f"Match result for Test 0: Song='{match_id}', Score={score}")
-#
-# print("\nTest 5")
-# spectrogram, sampling_rate = generate_spectogram('test_frags/Purcell_3.mp3')
-# peaks = find_peaks(spectrogram, sampling_rate)
-# test_hashes = generate_fingerprints(peaks, 'test')
-# print(f"Generated {len(test_hashes)} hashes")
-# match_id, score = match_sample(test_hashes, song_hashes)
-# print(f"Match result for Test 0: Song='{match_id}', Score={score}")
-#
-#
-# print('\nSUCCESS')
-
 
 import sqlite3
 
