@@ -79,61 +79,6 @@ def generate_fingerprints(peaks, song) -> dict:
     return hashes
 
 
-def match_sample(sample_fingerprint, db_fingerprints):
-    matches = {}
-    start_time = time.time()
-    for sample_hash, sample_anchor_data in sample_fingerprint.items():
-        # Check if this hash exists in the database
-        if sample_hash in db_fingerprints:
-            # Get the list of (song_id, db_anchor_time) for this hash
-            db_entries = db_fingerprints[sample_hash]
-
-            # Compare sample times with database times for this hash
-            for sample_anchor_tuple in sample_anchor_data:
-                sample_anchor_time = sample_anchor_tuple[1]
-                for db_song_id, db_anchor_time in db_entries:
-                    # Calculate the time difference (offset)
-                    delta_offset = db_anchor_time - sample_anchor_time
-
-                    # Bin the offset to group similar values
-                    # Adjust rounding precision based on hop_length and desired accuracy
-                    # Rounding to nearest 0.1s might be reasonable
-                    offset_bin = round(delta_offset, 1)
-
-                    # Increment the count for this (song_id, offset_bin) pair
-                    if db_song_id not in matches:
-                        matches[db_song_id] = {}
-                    if offset_bin not in matches[db_song_id]:
-                        matches[db_song_id][offset_bin] = 0
-                    matches[db_song_id][offset_bin] += 1
-
-    #scoring
-    best_match_song_id = None
-    max_count = 0  # This will be the actual score
-
-    if not matches:
-        print("No matching song IDs found in hash lookups.")
-        match_duration = time.time() - start_time
-        print(f"Matching took {match_duration:.2f} seconds.")
-        return None, 0  # Return None song ID and 0 score
-
-    # Iterate through songs and their offset counts
-    for song_id, offsets in matches.items():
-        for offset, count in offsets.items():
-            # Check if this count is the highest found so far
-            if count > max_count:
-                max_count = count
-                best_match_song_id = song_id
-                # Optional: store the best_offset_bin if you need it
-                # best_offset_bin = offset
-
-    match_duration = time.time() - start_time
-    print(f"Matching took {match_duration:.2f} seconds.")
-
-    # Return the song ID with the highest score (max_count) and the score itself
-    return best_match_song_id, max_count
-
-
 def add_song_to_db(conn, song_name, file_path: str):
     if isinstance(file_path, Path):
         file_path = str(file_path)
