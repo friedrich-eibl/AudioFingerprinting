@@ -29,7 +29,6 @@ def find_peaks(spectrogram, sampling_rate):
     peak_times = lr.frames_to_time(peak_indices[:, 1], sr=sampling_rate, hop_length=512)
     peak_freqs = lr.fft_frequencies(sr=sampling_rate)[peak_indices[:, 0]]
 
-    # Store peaks (time, frequency)
     peaks = list(zip(peak_times, peak_freqs))
     print(f"Found {len(peaks)} peaks.")
     return peaks
@@ -95,14 +94,9 @@ def add_song_to_db(conn, song_name, file_path: str):
 def add_fingerprints_to_db(conn, song_id, fingerprint_dict):
     cursor = conn.cursor()
     fingerprint_data = []
-    # Prepare data for batch insert
     for hash_val, entries in fingerprint_dict.items():
-         # Assuming entries are [(song_id_dummy, offset), ...] or just [offset]
-         # We only need the offset here
         for entry in entries:
-            # Handle both tuple (dummy_id, offset) and direct offset float
             offset = entry[1] if isinstance(entry, tuple) else entry
-            # Convert hash to string if needed, depends on hash function
             hash_str = str(hash_val)
             fingerprint_data.append((hash_str, song_id, offset))
 
@@ -127,7 +121,6 @@ def match_sample_db(sample_fingerprints: dict, db_path: str):
 
     for sample_hash, sample_anchor_times in sample_fingerprints.items():
         hash_str = str(sample_hash)
-        # Query DB for this hash
         cursor.execute("SELECT song_id, offset FROM fingerprints WHERE hash_value = ?", (hash_str,))
         db_entries = cursor.fetchall() # List of (song_id, db_anchor_time)
 
@@ -142,7 +135,7 @@ def match_sample_db(sample_fingerprints: dict, db_path: str):
 
     conn.close()
 
-    # --- Scoring (same logic as before) ---
+    # Scoring
     best_match_song_id_num = None
     max_count = 0
     if not matches:
