@@ -20,6 +20,6 @@ def add_songs_from_folder_to_db():
 
 if __name__ == '__main__':
     song_folder = Path(__file__).parent.parent / 'committee_audio'
-    db_path = Path(__file__).parent.parent / 'fingerprints_committee.db'
+    db_path = Path(__file__).parent.parent / 'fingerprint_improved_database.db'
 
     add_songs_from_folder_to_db()

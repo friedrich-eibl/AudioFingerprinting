@@ -1,6 +1,6 @@
 import sqlite3
 
-conn = sqlite3.connect('fingerprint_database.db')
+conn = sqlite3.connect('fingerprint_improved_database.db')
 cursor = conn.cursor()
 
 # Create tables if they don't exist

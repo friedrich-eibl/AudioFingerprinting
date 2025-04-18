@@ -54,9 +54,10 @@ def generate_fingerprints(peaks, song) -> dict:
         for j in range(i + 1, len(sorted_peaks)):
             target_time, target_freq = sorted_peaks[j]
             delta_t = target_time - anchor_time
+            delta_f = abs(target_freq - anchor_freq)
 
             # Check if within time bounds of target zone
-            if target_zone_time_delta_min <= delta_t <= target_zone_time_delta_max:
+            if target_zone_time_delta_min <= delta_t <= target_zone_time_delta_max and delta_f <= target_zone_freq_delta_max:
 
                 freq1_bin = int(anchor_freq)
                 freq2_bin = int(target_freq)

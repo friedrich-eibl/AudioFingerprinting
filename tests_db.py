@@ -1,8 +1,8 @@
 from fingerprinting import *
 from pathlib import Path
 
-db_file = 'fingerprints_committee.db'
-test_folder = 'eurasian_blackcap'
+db_file = 'fingerprint_improved_database.db'
+test_folder = 'robustness_tests'
 pathlist = list(Path(test_folder).glob('**/*.mp3')) + list(Path(test_folder).glob('**/*.wav'))
 
 successful_matches = 0
