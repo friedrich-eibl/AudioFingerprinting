@@ -80,7 +80,7 @@ const startButton = document.getElementById('startButton');
                         statusDiv.textContent = `Status: Error ${response.status} - ${result.detail || response.statusText}`;
                         resultsDiv.textContent = JSON.stringify(result, null, 2); // Show error detail JSON
                     }
-                    resultsDiv.style.display = 'block';
+                    resultsDiv.style.display = 'none';
                     console.log("Server Response:", result);
 
                 } catch (error) {
