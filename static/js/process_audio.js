@@ -3,6 +3,7 @@ const startButton = document.getElementById('startButton');
     const statusDiv = document.getElementById('status');
     const resultsDiv = document.getElementById('results');
     const evalDiv = document.getElementById('eval');
+    const bodyElm = document.body;
 
     let mediaRecorder;
     let audioChunks = [];
@@ -17,6 +18,9 @@ const startButton = document.getElementById('startButton');
             audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
             startButton.disabled = true;
             stopButton.disabled = false;
+            startButton.style.display = 'none'
+            stopButton.style.display = 'block'
+
             statusDiv.textContent = 'Status: Recording...';
             audioChunks = []; // Reset chunks for new recording
 
@@ -50,6 +54,8 @@ const startButton = document.getElementById('startButton');
                 if (audioStream) { audioStream.getTracks().forEach(track => track.stop()); console.log("Microphone tracks stopped."); }
 
                 startButton.disabled = false; stopButton.disabled = true;
+                startButton.style.display = 'block'
+                stopButton.style.display = 'none'
 
                 // --- Send data to backend ---
                 const formData = new FormData();
@@ -70,8 +76,11 @@ const startButton = document.getElementById('startButton');
                              evalMessage = 'Score not available.';
                         } else if (score < 30) { // Example threshold
                             evalMessage = 'No match found!';
-                        } else if (score >= 30){ // Example threshold
+                        } else if (score >= 150){ // Example threshold
                             evalMessage = 'Likely illegal trap detected';
+                            bodyElm.style.setProperty('background', 'var(--bg-gradient)', 'important');
+                        } else {
+                            evalMessage = 'Uncertain!';
                         }
 
                         evalDiv.textContent = evalMessage;
@@ -90,6 +99,8 @@ const startButton = document.getElementById('startButton');
                     console.error("Fetch Error:", error);
                 } finally {
                      startButton.disabled = false; stopButton.disabled = true; // Ensure reset
+                    startButton.style.display = 'block'
+                    stopButton.style.display = 'none'
                 }
             }; // end of onstop
 
@@ -98,6 +109,8 @@ const startButton = document.getElementById('startButton');
                  statusDiv.textContent = `Status: Recording Error - ${event.error.name}`;
                  alert(`Recording Error: ${event.error.name}`);
                  startButton.disabled = false; stopButton.disabled = true;
+                 startButton.style.display = 'block'
+                 stopButton.style.display = 'none'
                  if (audioStream) { audioStream.getTracks().forEach(track => track.stop()); }
             }
 
@@ -108,6 +121,8 @@ const startButton = document.getElementById('startButton');
             statusDiv.textContent = `Status: Error - ${err.message}`;
             alert(`Error accessing microphone: ${err.message} \n(Remember to use HTTPS or localhost)`);
             startButton.disabled = false; stopButton.disabled = true;
+            startButton.style.display = 'block'
+            stopButton.style.display = 'none'
         }
     }; // end of startButton.onclick
 

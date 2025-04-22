@@ -22,8 +22,8 @@ def show_spectogram_for_song(file_path, show_peaks: bool):
 
 
 if __name__ == '__main__':
-    song_path = 'db_mgm_cut_clip.mp3'
-    song_path = 'recognition_test_db_with_noise.mp3'
+    song_path = '../robustness_tests/db_mgm_cut_clip.mp3'
+    song_path = '../robustness_tests/recognition_test_db_with_noise.mp3'
         # (str(Path(__file__).parent.parent
         #         / 'committee_audio/+++ AMPELOPOULI9         Mönchsgrasmücke  BlackCap       meist verwendet.mp3'))
     show_spectogram_for_song(song_path, True)
