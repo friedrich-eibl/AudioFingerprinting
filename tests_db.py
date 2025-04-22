@@ -18,7 +18,7 @@ for path in pathlist:
     test_hashes = generate_fingerprints(peaks, 'test')
     match_name, score = match_sample_db(test_hashes, db_file)
 
-    if score > 30:
+    if score > 150:
         print(f"Match result: Song='{match_name}', Score={score}")
         if match_name in str(path):
             successful_matches += 1
