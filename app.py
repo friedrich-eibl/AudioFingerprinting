@@ -89,17 +89,12 @@ async def process_audio_upload_convert(audio_file: UploadFile = File(...)) -> JS
             "processing_result": result_data
         })
 
-    # --- Corrected Exception Handling ---
     except HTTPException as http_exc:
         # Re-raise HTTPExceptions directly (already handled)
         print(f"Caught HTTPException: {http_exc.status_code} - {http_exc.detail}")
         raise http_exc
     except Exception as e:
-        # Catch other unexpected errors
         print(f"Unhandled error processing audio: {e}")
-        # import traceback
-        # print(traceback.format_exc()) # Useful for debugging
-        # Raise a generic 500 error
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
     finally:
@@ -110,7 +105,7 @@ async def process_audio_upload_convert(audio_file: UploadFile = File(...)) -> JS
                 print(f"Cleaned up temporary file: {temp_wav_path}")
             except OSError as cleanup_err:
                 print(f"Error cleaning up temporary file {temp_wav_path}: {cleanup_err}")
-        # Ensure the original upload file object is closed
+
         if audio_file:
             await audio_file.close()
             print("UploadFile closed.")
