@@ -2,7 +2,7 @@ from fingerprinting import *
 from pathlib import Path
 
 
-def add_songs_from_folder_to_db():
+def add_songs_from_folder_to_db(db_path, song_folder):
     song_names = [f.name for f in song_folder.iterdir() if f.is_file()]
     conn = sqlite3.connect(db_path)
 
@@ -19,7 +19,7 @@ def add_songs_from_folder_to_db():
 
 
 if __name__ == '__main__':
-    song_folder = Path(__file__).parent.parent / 'committee_audio'
-    db_path = Path(__file__).parent.parent / 'fingerprint_improved_database.db'
+    song_folder = Path(__file__).parent.parent.parent / 'xeno-canto/xeno-canto_downloads/red-wingedblackbirdqA'
+    db_path = Path(__file__).parent.parent / 'limittest_database.db'
 
     add_songs_from_folder_to_db()
