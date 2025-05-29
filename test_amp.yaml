@@ -1,0 +1,47 @@
+experiments:
+  - name: "test_amp_1"
+    seed: 42
+    clip_len: 10
+    add_noise: 0.0
+    db_quantity: 10
+    negative_quantity: 10
+    smart_clipping: false
+    fingerprinting:
+      sampling_rate: 22050
+      peak_min_dist: 15
+      peak_min_amp: -20
+      tz_time_delta_min: 0.1
+      tz_time_delta_max: 1.0
+      tz_freq_delta_max: 1000
+    
+  - name: "test_amp_2"
+    seed: 42
+    clip_len: 10
+    add_noise: 0.0
+    db_quantity: 10
+    negative_quantity: 10
+    smart_clipping: false
+    fingerprinting:
+      sampling_rate: 22050
+      peak_min_dist: 15
+      peak_min_amp: -30
+      tz_time_delta_min: 0.1
+      tz_time_delta_max: 1.0
+      tz_freq_delta_max: 1000
+
+  - name: "test_amp_3"
+    seed: 42
+    clip_len: 10
+    add_noise: 0.0
+    db_quantity: 10
+    negative_quantity: 10
+    smart_clipping: false
+    fingerprinting:
+      sampling_rate: 22050
+      peak_min_dist: 15
+      peak_min_amp: -40
+      tz_time_delta_min: 0.1
+      tz_time_delta_max: 1.0
+      tz_freq_delta_max: 1000
+ 
+ 

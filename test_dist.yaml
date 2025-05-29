@@ -1,0 +1,44 @@
+experiments:
+  - name: "test_peakdist_25"
+    seed: 42
+    clip_len: 10
+    db_quantity: 10
+    negative_quantity: 10
+    smart_clipping: false
+    fingerprinting:
+      sampling_rate: 22050
+      peak_min_dist: 25
+      peak_min_amp: -30
+      tz_time_delta_min: 0.1
+      tz_time_delta_max: 1.0
+      tz_freq_delta_max: 1000
+    
+  - name: "test_peakdist_30"
+    seed: 42
+    clip_len: 10
+    db_quantity: 10
+    negative_quantity: 10
+    smart_clipping: false
+    fingerprinting:
+      sampling_rate: 22050
+      peak_min_dist: 30
+      peak_min_amp: -30
+      tz_time_delta_min: 0.1
+      tz_time_delta_max: 1.0
+      tz_freq_delta_max: 1000
+
+  - name: "test_peakdist_35"
+    seed: 42
+    clip_len: 10
+    db_quantity: 10
+    negative_quantity: 10
+    smart_clipping: false
+    fingerprinting:
+      sampling_rate: 22050
+      peak_min_dist: 35
+      peak_min_amp: -30
+      tz_time_delta_min: 0.1
+      tz_time_delta_max: 1.0
+      tz_freq_delta_max: 1000
+ 
+ 

@@ -1,5 +1,5 @@
 experiments:
-  - name: "test_1"
+  - name: "test_cliplen_1"
     seed: 42
     clip_len: 5
     db_quantity: 10
@@ -12,9 +12,10 @@ experiments:
       tz_time_delta_min: 0.1
       tz_time_delta_max: 1.0
       tz_freq_delta_max: 1000
-  - name: "test_2"
+    
+  - name: "test_cliplen_2"
     seed: 42
-    clip_len: 5
+    clip_len: 10
     db_quantity: 10
     negative_quantity: 10
     smart_clipping: false
@@ -26,5 +27,103 @@ experiments:
       tz_time_delta_max: 1.0
       tz_freq_delta_max: 1000
 
+  - name: "test_cliplen_3"
+    seed: 42
+    clip_len: 15
+    db_quantity: 10
+    negative_quantity: 10
+    smart_clipping: false
+    fingerprinting:
+      sampling_rate: 22050
+      peak_min_dist: 15
+      peak_min_amp: -30
+      tz_time_delta_min: 0.1
+      tz_time_delta_max: 1.0
+      tz_freq_delta_max: 1000
+ 
+ 
+  - name: "test_dist_1"
+    seed: 42
+    clip_len: 10
+    db_quantity: 10
+    negative_quantity: 10
+    smart_clipping: false
+    fingerprinting:
+      sampling_rate: 22050
+      peak_min_dist: 20
+      peak_min_amp: -30
+      tz_time_delta_min: 0.1
+      tz_time_delta_max: 1.0
+      tz_freq_delta_max: 1000
+    
+  - name: "test_dist_2"
+    seed: 42
+    clip_len: 10
+    db_quantity: 10
+    negative_quantity: 10
+    smart_clipping: false
+    fingerprinting:
+      sampling_rate: 22050
+      peak_min_dist: 15
+      peak_min_amp: -30
+      tz_time_delta_min: 0.1
+      tz_time_delta_max: 1.0
+      tz_freq_delta_max: 1000
+
+  - name: "test_dist_3"
+    seed: 42
+    clip_len: 10
+    db_quantity: 10
+    negative_quantity: 10
+    smart_clipping: false
+    fingerprinting:
+      sampling_rate: 22050
+      peak_min_dist: 10
+      peak_min_amp: -30
+      tz_time_delta_min: 0.1
+      tz_time_delta_max: 1.0
+      tz_freq_delta_max: 1000
 
 
+
+  - name: "test_amp_1"
+    seed: 42
+    clip_len: 10
+    db_quantity: 10
+    negative_quantity: 10
+    smart_clipping: false
+    fingerprinting:
+      sampling_rate: 22050
+      peak_min_dist: 15
+      peak_min_amp: -20
+      tz_time_delta_min: 0.1
+      tz_time_delta_max: 1.0
+      tz_freq_delta_max: 1000
+    
+  - name: "test_amp_2"
+    seed: 42
+    clip_len: 10
+    db_quantity: 10
+    negative_quantity: 10
+    smart_clipping: false
+    fingerprinting:
+      sampling_rate: 22050
+      peak_min_dist: 15
+      peak_min_amp: -30
+      tz_time_delta_min: 0.1
+      tz_time_delta_max: 1.0
+      tz_freq_delta_max: 1000
+
+  - name: "test_amp_3"
+    seed: 42
+    clip_len: 10
+    db_quantity: 10
+    negative_quantity: 10
+    smart_clipping: false
+    fingerprinting:
+      sampling_rate: 22050
+      peak_min_dist: 15
+      peak_min_amp: -40
+      tz_time_delta_min: 0.1
+      tz_time_delta_max: 1.0
+      tz_freq_delta_max: 1000

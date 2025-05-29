@@ -2,7 +2,7 @@ from fingerprinting import *
 from pathlib import Path
 
 
-def add_songs_from_folder_to_db(db_path, song_folder):
+def add_songs_from_folder_to_db(db_path, song_folder, exp) -> int:
     song_names = [f.name for f in song_folder.iterdir() if f.is_file()]
     conn = sqlite3.connect(db_path)
 
@@ -11,11 +11,19 @@ def add_songs_from_folder_to_db(db_path, song_folder):
         song_id = add_song_to_db(conn, song_name, path)
         if song_id:
             spectrogram, sampling_rate = generate_spectogram(path)
-            peaks = find_peaks(spectrogram, sampling_rate)
+            
+            peak_min_distance = exp["fingerprinting"]["peak_min_dist"]
+            peak_min_amplitude_threshold = exp["fingerprinting"]["peak_min_amp"]
+            
+            peaks = find_peaks(spectrogram, sampling_rate, peak_min_distance, peak_min_amplitude_threshold)
             song_hashes = generate_fingerprints(peaks,song_name)
             add_fingerprints_to_db(conn, song_id, song_hashes)
-
+   
+    cursor = conn.cursor()
+    cursor.execute("SELECT COUNT(*) FROM fingerprints")
+    fingerprints_count = cursor.fetchone()[0]
     conn.close()
+    return fingerprints_count
 
 
 if __name__ == '__main__':

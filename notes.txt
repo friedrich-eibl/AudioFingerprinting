@@ -1,0 +1,1 @@
+- store in extra file for every run and file: 'filename, wrong/correct match (bool), score'

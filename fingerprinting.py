@@ -8,8 +8,8 @@ from scipy.ndimage import maximum_filter
 from pathlib import Path
 
 
-def generate_spectogram(path: str):
-    audio_signal, sampling_rate = lr.load(path, sr=22050, mono=True)
+def generate_spectogram(path: str, start_time: float = 0.0, clip_duration: float = None):
+    audio_signal, sampling_rate = lr.load(path, sr=22050, mono=True, offset=start_time, duration=clip_duration)
 
     transformed_signal = lr.stft(audio_signal)
     spectrogram = lr.amplitude_to_db(np.abs(transformed_signal), ref=np.max)
@@ -17,10 +17,7 @@ def generate_spectogram(path: str):
     return spectrogram, sampling_rate
 
 
-def find_peaks(spectrogram, sampling_rate):
-    peak_min_distance = 15
-    peak_min_amplitude_threshold = -30
-
+def find_peaks(spectrogram, sampling_rate, peak_min_distance=15, peak_min_amplitude_threshold=-30):
     filtered_spectrogram = maximum_filter(spectrogram, size=(peak_min_distance, peak_min_distance))
     peaks_mask = (spectrogram == filtered_spectrogram)
     peaks_mask &= (spectrogram > (np.max(spectrogram) + peak_min_amplitude_threshold)) # Example threshold
