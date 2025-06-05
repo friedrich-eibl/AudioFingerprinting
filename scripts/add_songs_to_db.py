@@ -1,6 +1,8 @@
 from fingerprinting import *
 from pathlib import Path
 
+from pydub import AudioSegment
+
 
 def add_songs_from_folder_to_db(db_path, song_folder, exp) -> int:
     song_names = [f.name for f in song_folder.iterdir() if f.is_file()]
@@ -8,10 +10,12 @@ def add_songs_from_folder_to_db(db_path, song_folder, exp) -> int:
 
     for song_name in song_names:
         path = song_folder / song_name
-        song_id = add_song_to_db(conn, song_name, path)
+        duration = len(AudioSegment.from_file(str(path))) / 1000
+
+        song_id = add_song_to_db(conn, song_name, path, duration)
         if song_id:
             spectrogram, sampling_rate = generate_spectogram(path)
-            
+
             peak_min_distance = exp["fingerprinting"]["peak_min_dist"]
             peak_min_amplitude_threshold = exp["fingerprinting"]["peak_min_amp"]
             

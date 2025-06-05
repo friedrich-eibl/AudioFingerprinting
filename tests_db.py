@@ -61,7 +61,7 @@ def execute_test(db_file, test_folder, exp):
 
 
         test_hashes = generate_fingerprints(peaks, 'test')
-        match_name, score = match_sample_db(test_hashes, db_file)
+        match_name, score, confidence = match_sample_db(test_hashes, db_file)
         
         if score > 250:
             print(f"Match result: Song='{match_name}', Score={score}")
@@ -82,7 +82,7 @@ def execute_test(db_file, test_folder, exp):
         print(f"Elapsed time: {end - start:.6f} seconds\n")
         
         
-        write_line_to_file(exp["name"], [match_name, str(path), score]) # for testing
+        write_line_to_file(exp["name"], [match_name, str(path), score, confidence]) # for testing
 
     end_long = time.perf_counter()
 

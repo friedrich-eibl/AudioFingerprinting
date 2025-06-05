@@ -9,7 +9,8 @@ def setup_db(db_name):
         CREATE TABLE IF NOT EXISTS songs (
             song_id INTEGER PRIMARY KEY AUTOINCREMENT,
             song_name TEXT UNIQUE NOT NULL,
-            file_path TEXT
+            file_path TEXT,
+            song_duration REAL
         )
     ''')
     cursor.execute('''

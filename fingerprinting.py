@@ -71,13 +71,13 @@ def generate_fingerprints(peaks, song) -> dict:
     return hashes
 
 
-def add_song_to_db(conn, song_name, file_path: str):
+def add_song_to_db(conn, song_name, file_path: str, duration: float):
     if isinstance(file_path, Path):
         file_path = str(file_path)
 
     cursor = conn.cursor()
     try:
-        cursor.execute("INSERT INTO songs (song_name, file_path) VALUES (?, ?)", (song_name, file_path))
+        cursor.execute("INSERT INTO songs (song_name, file_path, song_duration) VALUES (?, ?, ?)", (song_name, file_path, duration))
         conn.commit()
         song_id = cursor.lastrowid
         print(f"Added song '{song_name}' with ID {song_id}")
@@ -152,15 +152,47 @@ def match_sample_db(sample_fingerprints: dict, db_path: str):
     print(f"Matching took {match_duration:.2f} seconds. Found {total_matches_found} total hash alignments.")
 
     best_match_song_name = song_id_to_name.get(best_match_song_id_num, "Unknown ID")
+    # for debugging
+    hash_count = get_hash_count(db_path, best_match_song_id_num)
+    song_duration = get_song_duration(db_path, best_match_song_id_num)
+    expected_match_score = hash_count * (10 / song_duration) #TODO: integrate dynamic clip len
 
-    return best_match_song_name, max_count
 
+    # expected_match_score = get_hash_count(db_path, best_match_song_id_num) * (match_duration / get_song_duration(db_path, best_match_song_id_num))
+    confidence = max_count / expected_match_score
+    alignment_confidence = max_count / sum(matches[best_match_song_id_num].values())
+
+
+    print(f"Confidence: {confidence:.2f}")
+    print(f"Alignment confidence: {alignment_confidence:.2f}")
+
+    return best_match_song_name, max_count, confidence
+
+def get_hash_count(db_path: str, song_id: int) -> int:
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT COUNT(*) FROM fingerprints WHERE song_id = ?", (song_id,))
+    count = cursor.fetchone()[0]
+    conn.close()
+
+    return count
+
+def get_song_duration(db_path: str, song_id: int) -> float:
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT song_duration FROM songs WHERE song_id = ?", (song_id,))
+    duration = cursor.fetchone()[0]
+    conn.close()
+
+    return duration
 
 def endpoint_detection_app(file_path):
     db_file = 'fingerprints_committee.db'
     spectrogram, sampling_rate = generate_spectogram(file_path)
     peaks = find_peaks(spectrogram, sampling_rate)
     test_hashes = generate_fingerprints(peaks, 'test')
-    match_name, score = match_sample_db(test_hashes, db_file)
+    match_name, score, confidence = match_sample_db(test_hashes, db_file)
 
     return match_name, score
