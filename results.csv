@@ -1,4 +1,0 @@
-test_name,db_hashes,matching_time,matching_time_single,wrong_matches,correct_matches,no_matches,threshold_too_high
-test_gen_d20a40,3137230,95.72710490669124,-,0,99,268,83
-test_peakdist_d20a40cl15,3137230,122.56824058969505,-,0,105,262,79
-test_peakdist_d20a40cl20,3137230,146.54669741145335,-,0,113,254,71
