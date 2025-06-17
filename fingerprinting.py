@@ -4,11 +4,11 @@ import sqlite3
 import time
 from collections import defaultdict # Useful for counting
 from scipy.ndimage import maximum_filter
-
+from typing import List, Tuple
 from pathlib import Path
 
 
-def generate_spectogram(path: str, start_time: float = 0.0, clip_duration: float = None):
+def generate_spectogram(path: str, start_time: float = 0.0, clip_duration: float = None) -> Tuple[np.ndarray, int]:
     audio_signal, sampling_rate = lr.load(path, sr=22050, mono=True, offset=start_time, duration=clip_duration)
 
     transformed_signal = lr.stft(audio_signal)
@@ -17,7 +17,7 @@ def generate_spectogram(path: str, start_time: float = 0.0, clip_duration: float
     return spectrogram, sampling_rate
 
 
-def find_peaks(spectrogram, sampling_rate, peak_min_distance=15, peak_min_amplitude_threshold=-30):
+def find_peaks(spectrogram: np.ndarray, sampling_rate: int, peak_min_distance=15: int, peak_min_amplitude_threshold=-30: int) -> List[Tuple[float, float]]:
     filtered_spectrogram = maximum_filter(spectrogram, size=(peak_min_distance, peak_min_distance))
     peaks_mask = (spectrogram == filtered_spectrogram)
     peaks_mask &= (spectrogram > (np.max(spectrogram) + peak_min_amplitude_threshold)) # Example threshold
@@ -31,7 +31,7 @@ def find_peaks(spectrogram, sampling_rate, peak_min_distance=15, peak_min_amplit
     return peaks
 
 
-def generate_fingerprints(peaks, song) -> dict:
+def generate_fingerprints(peaks: List[Tuple[float, float], song: str) -> dict:
     # Simplified conceptual hashing (needs refinement for efficiency and robustness)
     hashes = {} # Dictionary to store hashes: { hash_value: (song_id, time_offset) }
 
@@ -89,7 +89,7 @@ def add_song_to_db(conn, song_name, file_path: str, duration: float):
         return result[0] if result else None
 
 
-def add_fingerprints_to_db(conn, song_id, fingerprint_dict):
+def add_fingerprints_to_db(conn, song_id, fingerprint_dict) -> None:
     cursor = conn.cursor()
     fingerprint_data = []
     for hash_val, entries in fingerprint_dict.items():
@@ -103,7 +103,7 @@ def add_fingerprints_to_db(conn, song_id, fingerprint_dict):
     print(f"Added {len(fingerprint_data)} fingerprint entries for song ID {song_id}")
 
 
-def match_sample_db(sample_fingerprints: dict, db_path: str):
+def match_sample_db(sample_fingerprints: dict, db_path: str) -> Tuple[str, int, float]:
     """Matches sample fingerprints against the SQLite database."""
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
@@ -155,7 +155,7 @@ def match_sample_db(sample_fingerprints: dict, db_path: str):
     # for debugging
     hash_count = get_hash_count(db_path, best_match_song_id_num)
     song_duration = get_song_duration(db_path, best_match_song_id_num)
-    expected_match_score = hash_count * (10 / song_duration) #TODO: integrate dynamic clip len
+    expected_match_score = hash_count * (25 / song_duration) #TODO: integrate dynamic clip len
 
 
     # expected_match_score = get_hash_count(db_path, best_match_song_id_num) * (match_duration / get_song_duration(db_path, best_match_song_id_num))
@@ -166,7 +166,7 @@ def match_sample_db(sample_fingerprints: dict, db_path: str):
     print(f"Confidence: {confidence:.2f}")
     print(f"Alignment confidence: {alignment_confidence:.2f}")
 
-    return best_match_song_name, max_count, confidence
+    return best_match_song_name, max_count, alignment_confidence
 
 def get_hash_count(db_path: str, song_id: int) -> int:
     conn = sqlite3.connect(db_path)
@@ -188,7 +188,7 @@ def get_song_duration(db_path: str, song_id: int) -> float:
 
     return duration
 
-def endpoint_detection_app(file_path):
+def endpoint_detection_app(file_path) -> Tuple[str, int]:
     db_file = 'fingerprints_committee.db'
     spectrogram, sampling_rate = generate_spectogram(file_path)
     peaks = find_peaks(spectrogram, sampling_rate)
