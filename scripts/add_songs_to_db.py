@@ -14,7 +14,7 @@ def add_songs_from_folder_to_db(db_path, song_folder, exp) -> int:
 
         song_id = add_song_to_db(conn, song_name, path, duration)
         if song_id:
-            spectrogram, sampling_rate = generate_spectogram(path)
+            spectrogram, sampling_rate = generate_spectrogram(path)
 
             peak_min_distance = exp["fingerprinting"]["peak_min_dist"]
             peak_min_amplitude_threshold = exp["fingerprinting"]["peak_min_amp"]
