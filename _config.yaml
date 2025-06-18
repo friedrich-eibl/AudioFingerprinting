@@ -1,0 +1,7 @@
+experiments:
+  - name: "test_acc_eval_d20a40cl20"
+    seed: 42
+    clip_len: 20
+    fingerprinting:
+      peak_min_dist: 25
+      peak_min_amp: -40
