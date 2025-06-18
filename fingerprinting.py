@@ -17,7 +17,7 @@ def generate_spectogram(path: str, start_time: float = 0.0, clip_duration: float
     return spectrogram, sampling_rate
 
 
-def find_peaks(spectrogram: np.ndarray, sampling_rate: int, peak_min_distance=15: int, peak_min_amplitude_threshold=-30: int) -> List[Tuple[float, float]]:
+def find_peaks(spectrogram: np.ndarray, sampling_rate: int, peak_min_distance: int, peak_min_amplitude_threshold: int) -> List[Tuple[float, float]]:
     filtered_spectrogram = maximum_filter(spectrogram, size=(peak_min_distance, peak_min_distance))
     peaks_mask = (spectrogram == filtered_spectrogram)
     peaks_mask &= (spectrogram > (np.max(spectrogram) + peak_min_amplitude_threshold)) # Example threshold
@@ -31,7 +31,7 @@ def find_peaks(spectrogram: np.ndarray, sampling_rate: int, peak_min_distance=15
     return peaks
 
 
-def generate_fingerprints(peaks: List[Tuple[float, float], song: str) -> dict:
+def generate_fingerprints(peaks: List[Tuple[float, float]], song: str) -> dict:
     # Simplified conceptual hashing (needs refinement for efficiency and robustness)
     hashes = {} # Dictionary to store hashes: { hash_value: (song_id, time_offset) }
 
