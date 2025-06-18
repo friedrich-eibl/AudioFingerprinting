@@ -10,7 +10,7 @@ from tests_db import execute_test
 
 benchmark = 'committee_audio'
 
-with open('_config.yaml', 'r') as file:
+with open('../_config.yaml', 'r') as file:
     config = yaml.safe_load(file)
 
 experiments = config['experiments']
