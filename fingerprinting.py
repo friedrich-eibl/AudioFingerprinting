@@ -8,7 +8,7 @@ from typing import List, Tuple
 from pathlib import Path
 
 
-def generate_spectogram(path: str, start_time: float = 0.0, clip_duration: float = None) -> Tuple[np.ndarray, int]:
+def generate_spectrogram(path: str, start_time: float = 0.0, clip_duration: float = None) -> Tuple[np.ndarray, int]:
     audio_signal, sampling_rate = lr.load(path, sr=22050, mono=True, offset=start_time, duration=clip_duration)
 
     transformed_signal = lr.stft(audio_signal)
@@ -103,7 +103,7 @@ def add_fingerprints_to_db(conn, song_id, fingerprint_dict) -> None:
     print(f"Added {len(fingerprint_data)} fingerprint entries for song ID {song_id}")
 
 
-def match_sample_db(sample_fingerprints: dict, db_path: str) -> Tuple[str, int, float]:
+def match_sample_db(sample_fingerprints: dict, db_path: str, sample_len: float) -> Tuple[str, int, float]:
     """Matches sample fingerprints against the SQLite database."""
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
@@ -155,7 +155,7 @@ def match_sample_db(sample_fingerprints: dict, db_path: str) -> Tuple[str, int, 
     # for debugging
     hash_count = get_hash_count(db_path, best_match_song_id_num)
     song_duration = get_song_duration(db_path, best_match_song_id_num)
-    expected_match_score = hash_count * (25 / song_duration) #TODO: integrate dynamic clip len
+    expected_match_score = hash_count * (sample_len / song_duration)
 
 
     # expected_match_score = get_hash_count(db_path, best_match_song_id_num) * (match_duration / get_song_duration(db_path, best_match_song_id_num))
@@ -188,11 +188,18 @@ def get_song_duration(db_path: str, song_id: int) -> float:
 
     return duration
 
+
+def get_sample_len() -> float:
+    #TODO: fetch recording length for live recording
+    pass
+
 def endpoint_detection_app(file_path) -> Tuple[str, int]:
     db_file = 'fingerprints_committee.db'
-    spectrogram, sampling_rate = generate_spectogram(file_path)
+    spectrogram, sampling_rate = generate_spectrogram(file_path)
     peaks = find_peaks(spectrogram, sampling_rate)
     test_hashes = generate_fingerprints(peaks, 'test')
-    match_name, score, confidence = match_sample_db(test_hashes, db_file)
+    sample_len = get_sample_len()
+    match_name, score, confidence = match_sample_db(test_hashes, db_file, sample_len)
 
     return match_name, score
+

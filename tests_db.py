@@ -33,7 +33,7 @@ def execute_test(db_file, test_folder, exp):
     wrong_matches = 0
     threshold_too_high = 0
     relative_starts = generate_random_list(seed=exp["seed"], length=30)
-    add_noise = ["add_noise"]
+    add_noise = exp["add_noise"]
     overall_runtime = 0
 
     start_long = time.perf_counter()
@@ -50,18 +50,18 @@ def execute_test(db_file, test_folder, exp):
         relative_start = relative_starts[idx%len(relative_starts)]
         start_time = relative_start * (get_audio_duration(path_in_str)-clip_length)
         
-        spectrogram, sampling_rate = generate_spectogram(path_in_str, start_time, clip_length)
+        spectrogram, sampling_rate = generate_spectrogram(path_in_str, start_time, clip_length)
         peaks = find_peaks(spectrogram, sampling_rate,peak_min_distance, peak_min_amplitude_threshold)
         
         while len(peaks) < 5 and start_time < (get_audio_duration(path_in_str)-clip_length):
             start_time += 0.5
             print("incremented start_time by 0.5")
-            spectrogram, sampling_rate = generate_spectogram(path_in_str, start_time, clip_length)
+            spectrogram, sampling_rate = generate_spectrogram(path_in_str, start_time, clip_length)
             peaks = find_peaks(spectrogram, sampling_rate,peak_min_distance, peak_min_amplitude_threshold)
 
 
         test_hashes = generate_fingerprints(peaks, 'test')
-        match_name, score, confidence = match_sample_db(test_hashes, db_file)
+        match_name, score, confidence = match_sample_db(test_hashes, db_file, exp['clip_len'])
         
         if score > 250:
             print(f"Match result: Song='{match_name}', Score={score}")
