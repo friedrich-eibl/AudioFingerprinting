@@ -1,11 +1,11 @@
 from fingerprinting import *
 import librosa as lr
 from pathlib import Path
-from pydub import AudioSegment
 
 import time
 import random
 import csv
+
 
 def generate_random_list(seed: int, length: int):
     random.seed(seed)
@@ -50,13 +50,13 @@ def execute_test(db_file, test_folder, exp):
             relative_start = relative_starts[idx%len(relative_starts)]
             start_time = relative_start * (get_audio_duration(path_in_str)-clip_length)
             
-            spectrogram, sampling_rate = generate_spectogram(path_in_str, start_time, clip_length)
+            spectrogram, sampling_rate = generate_spectrogram(path_in_str, start_time, clip_length)
             peaks = find_peaks(spectrogram, sampling_rate,peak_min_distance, peak_min_amplitude_threshold)        
             
             while len(peaks) < 10 and start_time < (get_audio_duration(path_in_str)-clip_length):
                 start_time += 0.5
                 print("incremented start_time by 0.5")
-                spectrogram, sampling_rate = generate_spectogram(path_in_str, start_time, clip_length)
+                spectrogram, sampling_rate = generate_spectrogram(path_in_str, start_time, clip_length)
                 peaks = find_peaks(spectrogram, sampling_rate,peak_min_distance, peak_min_amplitude_threshold)
 
 

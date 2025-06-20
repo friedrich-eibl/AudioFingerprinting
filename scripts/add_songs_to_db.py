@@ -16,7 +16,7 @@ def add_songs_from_folder_to_db(db_path, song_folder, exp) -> int:
 
             song_id = add_song_to_db(conn, song_name, path, duration)
             if song_id:
-                spectrogram, sampling_rate = generate_spectogram(path)
+                spectrogram, sampling_rate = generate_spectrogram(path)
 
                 peak_min_distance = exp["fingerprinting"]["peak_min_dist"]
                 peak_min_amplitude_threshold = exp["fingerprinting"]["peak_min_amp"]
@@ -35,7 +35,7 @@ def add_songs_from_folder_to_db(db_path, song_folder, exp) -> int:
 
 
 if __name__ == '__main__':
-    song_folder = Path(__file__).parent.parent.parent / 'xeno-canto/xeno-canto_downloads/red-wingedblackbirdqA'
-    db_path = Path(__file__).parent.parent / 'limittest_database.db'
+    song_folder = Path(__file__).parent.parent.parent / 'test_files_path'
+    db_path = Path(__file__).parent.parent / 'test_database.db'
 
     add_songs_from_folder_to_db()
