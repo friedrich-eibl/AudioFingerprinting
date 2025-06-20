@@ -35,34 +35,39 @@ def execute_test(db_file, test_folder, exp):
     relative_starts = generate_random_list(seed=exp["seed"], length=30)
     add_noise = ["add_noise"]
     overall_runtime = 0
+    failed_test_count = 0
 
     start_long = time.perf_counter()
     for idx, path in enumerate(pathlist):
-        # because path is object not string
-        start = time.perf_counter()
-        peak_min_distance = exp["fingerprinting"]["peak_min_dist"]
-        peak_min_amplitude_threshold = exp["fingerprinting"]["peak_min_amp"]
+        try:
+            # because path is object not string
+            start = time.perf_counter()
+            peak_min_distance = exp["fingerprinting"]["peak_min_dist"]
+            peak_min_amplitude_threshold = exp["fingerprinting"]["peak_min_amp"]
 
-        path_in_str = str(path)
-        print(path_in_str)
-        
-        clip_length = exp["clip_len"]
-        relative_start = relative_starts[idx%len(relative_starts)]
-        start_time = relative_start * (get_audio_duration(path_in_str)-clip_length)
-        
-        spectrogram, sampling_rate = generate_spectogram(path_in_str, start_time, clip_length)
-        peaks = find_peaks(spectrogram, sampling_rate,peak_min_distance, peak_min_amplitude_threshold)
-        
-        while len(peaks) < 5 and start_time < (get_audio_duration(path_in_str)-clip_length):
-            start_time += 0.5
-            print("incremented start_time by 0.5")
+            path_in_str = str(path)
+            print(path_in_str)
+            
+            clip_length = exp["clip_len"]
+            relative_start = relative_starts[idx%len(relative_starts)]
+            start_time = relative_start * (get_audio_duration(path_in_str)-clip_length)
+            
             spectrogram, sampling_rate = generate_spectogram(path_in_str, start_time, clip_length)
             peaks = find_peaks(spectrogram, sampling_rate,peak_min_distance, peak_min_amplitude_threshold)
+            
+            while len(peaks) < 10 and start_time < (get_audio_duration(path_in_str)-clip_length):
+                start_time += 0.5
+                print("incremented start_time by 0.5")
+                spectrogram, sampling_rate = generate_spectogram(path_in_str, start_time, clip_length)
+                peaks = find_peaks(spectrogram, sampling_rate,peak_min_distance, peak_min_amplitude_threshold)
 
 
-        test_hashes = generate_fingerprints(peaks, 'test')
-        match_name, score, confidence = match_sample_db(test_hashes, db_file)
-        
+            test_hashes = generate_fingerprints(peaks, 'test')
+            match_name, score, confidence = match_sample_db(test_hashes, db_file)
+        except Exception as e:
+            failed_test_count += 1
+            continue
+
         if score > 250:
             print(f"Match result: Song='{match_name}', Score={score}")
             if match_name in str(path):
@@ -99,7 +104,8 @@ def execute_test(db_file, test_folder, exp):
         "wrong_matches": wrong_matches,
         "correct_matches": successful_matches,
         "no_matches": no_match_count,
-        "threshold_too_high": threshold_too_high
+        "threshold_too_high": threshold_too_high,
+        "failed_to_test": failed_test_count,
     }
 
     return results

@@ -13,22 +13,21 @@ def read_csv_to_list(file_path):
 
 
 if __name__ == '__main__':
-    threshold = int(sys.argv[1])
-    elements = read_csv_to_list('test_acc_eval_d20a40cl20')
+    threshold = float(sys.argv[1])
+    elements = read_csv_to_list('bigtest_wod_2')
     print("len: ", len(elements))
 
 
     correct, incorrect, too_high_threshold, tn, fn = 0, 0, 0, 0, 0
     mismatch = 0
     for el in elements:
-        if el[0] in el[1] and int(el[2]) >= threshold:
+        if el[0]  in el[1] and float(el[3]) >= threshold:
             correct+=1
-        elif el[0] not in el[1] and int(el[2]) > threshold:
+        elif el[0] not in el[1] and float(el[3]) > threshold:
             incorrect+=1
-        elif el[0] in el[1] and int(el[2]) < threshold:
+            print(el[0], el[1], el[3])
+        elif el[0] in el[1] and float(el[3]) < threshold:
             too_high_threshold += 1
-        elif el[0] not in el[1]:
-            mismatch += 1
         elif "/b/" in el[1]:
             tn += 1
         elif "/a/" in el[1]:
