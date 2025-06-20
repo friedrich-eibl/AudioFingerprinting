@@ -61,7 +61,7 @@ def execute_test(db_file, test_folder, exp):
 
 
             test_hashes = generate_fingerprints(peaks, 'test')
-            match_name, score, confidence = match_sample_db(test_hashes, db_file)
+            match_name, score, confidence = match_sample_db(test_hashes, db_file, exp["clip_len"])
         except Exception as e:
             failed_test_count += 1
             continue
@@ -110,4 +110,4 @@ def execute_test(db_file, test_folder, exp):
 
 
 if __name__ == '__main__':
-    results = execute_test('limittest_database.db', 'eurasian_blackcap')
+    results = execute_test('test_database.db', 'eurasian_blackcap')
