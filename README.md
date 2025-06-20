@@ -37,6 +37,6 @@ If you only want to test the detection of certain audio files using an existing 
 
 ## Application
 
-For testing the web application of a live detector run:
+For testing the web application of a live detector add songs using [scripts/add_songs_to_db.py](https://github.com/friedrich-eibl/AudioFingerprinting/blob/master/scripts/add_songs_to_db.py) and run:
 
 `python app.py`
