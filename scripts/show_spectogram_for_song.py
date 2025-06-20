@@ -3,11 +3,11 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import librosa as lr
 
-from fingerprinting import generate_spectogram, find_peaks
+from fingerprinting import generate_spectrogram, find_peaks
 
 
 def show_spectogram_for_song(file_path, show_peaks: bool):
-    spectrogram, sampling_rate = generate_spectogram(file_path)
+    spectrogram, sampling_rate = generate_spectrogram(file_path)
 
     plt.figure()
     lr.display.specshow(spectrogram, sr=sampling_rate, x_axis='time', y_axis='log')

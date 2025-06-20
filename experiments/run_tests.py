@@ -32,11 +32,10 @@ with open('bigtest_wod_2.csv', mode='w', newline='') as csv_file:
             "eurasianblackcaptypesongqClen80len300",
             "songthrushtypesongqClen90len300"
         ]
-
-        db_hash_count = 0
-        
+         
         for data_dir in data_dirs:
             db_hash_count = add_songs_from_folder_to_db(Path(__file__).parent / db_file, Path(__file__).parent / f'test_data/{data_dir}/a', exp)
+        
         results = execute_test(db_file, benchmark, exp)
         results['test_name'] = exp['name']
         results['db_hashes'] = db_hash_count
