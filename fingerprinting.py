@@ -2,7 +2,7 @@ import librosa as lr
 import numpy as np
 import sqlite3
 import time
-from collections import defaultdict # Useful for counting
+from collections import defaultdict
 from scipy.ndimage import maximum_filter
 from typing import List, Tuple
 from pathlib import Path
@@ -32,18 +32,14 @@ def find_peaks(spectrogram: np.ndarray, sampling_rate: int, peak_min_distance: i
 
 
 def generate_fingerprints(peaks: List[Tuple[float, float]], song: str) -> dict:
-    # Simplified conceptual hashing (needs refinement for efficiency and robustness)
-    hashes = {} # Dictionary to store hashes: { hash_value: (song_id, time_offset) }
+    hashes = {} # { hash_value: (song_id, time_offset) }
 
-    # Parameters for pairing (adjust these)
     target_zone_time_delta_min = 0.1
     target_zone_time_delta_max = 1.0
     target_zone_freq_delta_max = 1000
 
-    # This part would run for *each song* when building the database
-    song_id = song # Replace with actual ID
+    song_id = song
 
-    # Sort peaks by time for efficient pairing
     sorted_peaks = sorted(peaks, key=lambda x: x[0])
 
     for i in range(len(sorted_peaks)):
@@ -53,12 +49,11 @@ def generate_fingerprints(peaks: List[Tuple[float, float]], song: str) -> dict:
             delta_t = target_time - anchor_time
             delta_f = abs(target_freq - anchor_freq)
 
-            # Check if within time bounds of target zone
             if target_zone_time_delta_min <= delta_t <= target_zone_time_delta_max and delta_f <= target_zone_freq_delta_max:
 
                 freq1_bin = int(anchor_freq)
                 freq2_bin = int(target_freq)
-                delta_t_bin = int(delta_t * 10) # Scale time delta, adjust precision
+                delta_t_bin = int(delta_t * 10)
 
                 hash_value = hash((freq1_bin, freq2_bin, delta_t_bin))
 
@@ -66,7 +61,6 @@ def generate_fingerprints(peaks: List[Tuple[float, float]], song: str) -> dict:
                     hashes[hash_value] = []
                 hashes[hash_value].append((song_id, anchor_time))
             elif delta_t > target_zone_time_delta_max:
-                # Since peaks are sorted by time, no further peaks will be in the time zone
                 break
     return hashes
 
@@ -152,7 +146,7 @@ def match_sample_db(sample_fingerprints: dict, db_path: str, sample_len: float) 
     print(f"Matching took {match_duration:.2f} seconds. Found {total_matches_found} total hash alignments.")
 
     best_match_song_name = song_id_to_name.get(best_match_song_id_num, "Unknown ID")
-    # for debugging
+
     hash_count = get_hash_count(db_path, best_match_song_id_num)
     song_duration = get_song_duration(db_path, best_match_song_id_num)
     expected_match_score = hash_count * (sample_len / song_duration)

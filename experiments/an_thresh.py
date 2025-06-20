@@ -3,9 +3,6 @@ import sys
 
 
 def read_csv_to_list(file_path):
-    """
-    Reads a CSV file and returns a list of rows (each row is a list of values).
-    """
     with open(file_path, 'r', newline='') as f:
         reader = csv.reader(f)
         data = [row for row in reader]

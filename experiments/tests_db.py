@@ -16,8 +16,6 @@ def get_audio_duration(path: str):
     return len(y) / sr
 
 def write_line_to_file(file_path, elements):
-    #if not os.path.isfile(file_path)
-
     row = ', '.join(str(e) for e in elements)
     with open(file_path, 'a', newline='') as f:
         writer = csv.writer(f)

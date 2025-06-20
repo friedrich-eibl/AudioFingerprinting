@@ -4,7 +4,6 @@ def setup_db(db_name):
     conn = sqlite3.connect(db_name)
     cursor = conn.cursor()
 
-    # Create tables if they don't exist
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS songs (
             song_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -21,7 +20,7 @@ def setup_db(db_name):
             FOREIGN KEY (song_id) REFERENCES songs (song_id)
         )
     ''')
-    # Create an index for fast hash lookups
+
     cursor.execute('''
         CREATE INDEX IF NOT EXISTS idx_hash_value ON fingerprints (hash_value)
     ''')
