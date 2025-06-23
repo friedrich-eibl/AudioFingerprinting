@@ -1,4 +1,3 @@
-
 # Audio-Fingerprinting Bird Songs
 
 This project is meant to explore the possible application of acoustic fingerprinting for detecting playback traps used in poaching of song birds. The algorithm was based on the [Shazam algorithm](https://www.ee.columbia.edu/~dpwe/papers/Wang03-shazam.pdf) for music recognition.
@@ -40,3 +39,7 @@ If you only want to test the detection of certain audio files using an existing 
 For testing the web application of a live detector add songs using [scripts/add_songs_to_db.py](https://github.com/friedrich-eibl/AudioFingerprinting/blob/master/scripts/add_songs_to_db.py) and run:
 
 `python app.py`
+
+![Screenshot from 2025-04-22 16-05-43](https://github.com/user-attachments/assets/09f5b55f-8b97-404b-adde-12c378d24437)
+![Screenshot from 2025-04-22 16-06-41](https://github.com/user-attachments/assets/e50ec036-570b-436d-9e86-8451adca8d74)
+
