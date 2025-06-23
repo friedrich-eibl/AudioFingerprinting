@@ -17,7 +17,7 @@ from fingerprinting import endpoint_detection_app
 
 app = FastAPI()
 BASE_DIR = Path(__file__).resolve().parent
-STATIC_DIR = BASE_DIR / "static"
+STATIC_DIR = BASE_DIR / "application/static"
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 @app.get('/api/')
@@ -113,7 +113,7 @@ async def process_audio_upload_convert(audio_file: UploadFile = File(...)) -> JS
 
 @app.get('/', response_class=HTMLResponse)
 async def read_html_root():
-    html_file_path = BASE_DIR / "templates/index.html"
+    html_file_path = BASE_DIR / "application/templates/index.html"
     try:
         with open(html_file_path, "r", encoding="utf-8") as f:
             html_content = f.read()

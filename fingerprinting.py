@@ -188,9 +188,9 @@ def get_sample_len() -> float:
     pass
 
 def endpoint_detection_app(file_path) -> Tuple[str, int]:
-    db_file = 'fingerprints_committee.db'
+    db_file = 'fingerprints.db'
     spectrogram, sampling_rate = generate_spectrogram(file_path)
-    peaks = find_peaks(spectrogram, sampling_rate)
+    peaks = find_peaks(spectrogram, sampling_rate, 25, -40)
     test_hashes = generate_fingerprints(peaks, 'test')
     sample_len = get_sample_len()
     match_name, score, confidence = match_sample_db(test_hashes, db_file, sample_len)
