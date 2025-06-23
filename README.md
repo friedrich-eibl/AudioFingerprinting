@@ -40,7 +40,6 @@ For testing the web application of a live detector add songs using [scripts/add_
 
 `python app.py`
 
-
-![Screenshot from 2025-04-22 16-05-43](https://github.com/user-attachments/assets/be3dcc1b-9b51-48ff-ae67-993700057ac6)
-![Screenshot from 2025-04-22 16-06-41](https://github.com/user-attachments/assets/a60005e1-9136-4449-9094-38a09b7de818)
-
+<table><tr><td>
+<img src="https://github.com/user-attachments/assets/be3dcc1b-9b51-48ff-ae67-993700057ac6"/></td><td> <img src="https://github.com/user-attachments/assets/a60005e1-9136-4449-9094-38a09b7de818"/>
+</td></tr></table>
